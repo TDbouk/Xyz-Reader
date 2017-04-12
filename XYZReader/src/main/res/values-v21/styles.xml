@@ -1,14 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+
+    <style name="AppTheme" parent="@style/Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/theme_primary</item>
+        <item name="colorPrimaryDark">@color/theme_primary_dark</item>
+        <item name="colorAccent">@color/theme_accent</item>
+        <item name="android:windowContentTransitions">true</item>
+    </style>
+
     <style name="Theme.Bacon" parent="@style/AppTheme">
         <item name="android:windowExitTransition">@android:transition/explode</item>
     </style>
 
-
     <style name="Theme.Bacon.Detail" parent="@style/AppTheme">
         <item name="android:statusBarColor">@android:color/transparent</item>
-        <item name="android:windowContentTransitions">true</item>
     </style>
+
 
 </resources>

@@ -162,7 +162,7 @@ public class ArticleDetailFragment extends Fragment implements
             }
         });
 
-        addEnterTransitionToTextBody();
+//        addEnterTransitionToArticle();
         addSharedAnimation();
         bindViews();
         updateStatusBar();
@@ -170,13 +170,13 @@ public class ArticleDetailFragment extends Fragment implements
         return mRootView;
     }
 
-    private void addEnterTransitionToTextBody() {
+    private void addEnterTransitionToArticle() {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-            Slide slide;
-            slide = new Slide(Gravity.BOTTOM);
-            slide.addTarget(R.id.article_body);
+            Slide slide = new Slide(Gravity.BOTTOM);
+            slide.addTarget(R.id.article_container);
             slide.setInterpolator(AnimationUtils.loadInterpolator(getActivity(),
                     android.R.interpolator.linear_out_slow_in));
+            slide.setDuration(500);
             getActivity().getWindow().setEnterTransition(slide);
         }
     }
@@ -262,8 +262,11 @@ public class ArticleDetailFragment extends Fragment implements
                                 + "</font>"));
 
             }
-            bodyView.setText("Hello");
-            bodyView.setText(Html.fromHtml(mCursor.getString(ArticleLoader.Query.BODY).replaceAll("(\r\n|\n)", "<br />")));
+            String temp = "Hello World ";
+            for (int i = 0; i < 100; i++)
+                temp = temp.concat("Hello World ");
+            bodyView.setText(temp);
+//            bodyView.setText(Html.fromHtml(mCursor.getString(ArticleLoader.Query.BODY).replaceAll("(\r\n|\n)", "<br />")));
             ImageLoaderHelper.getInstance(getActivity()).getImageLoader()
                     .get(mCursor.getString(ArticleLoader.Query.PHOTO_URL), new ImageLoader.ImageListener() {
                         @Override

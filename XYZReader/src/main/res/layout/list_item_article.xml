@@ -7,8 +7,7 @@
     android:layout_marginTop="4dp"
     android:clickable="true"
     android:focusable="true"
-    android:foreground="?selectableItemBackground"
-    android:transitionName="@string/transition_photo">
+    android:foreground="?selectableItemBackground">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -23,7 +22,8 @@
             android:layout_gravity="center"
             android:adjustViewBounds="true"
             android:background="@color/photo_placeholder"
-            android:scaleType="centerCrop" />
+            android:scaleType="centerCrop"
+            android:transitionName="@string/transition_photo" />
 
         <TextView
             android:id="@+id/article_title"
