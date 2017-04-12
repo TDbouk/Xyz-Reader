@@ -1,5 +1,6 @@
 package com.example.xyzreader.ui;
 
+import android.app.ActivityOptions;
 import android.app.LoaderManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -74,7 +75,7 @@ public class ArticleListActivity extends AppCompatActivity implements
                 refresh();
             }
         });
-        
+
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         getLoaderManager().initLoader(0, null, this);
 
@@ -82,6 +83,7 @@ public class ArticleListActivity extends AppCompatActivity implements
             refresh();
         }
 
+        // Open the device's settings activity
         snackbarListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -173,8 +175,19 @@ public class ArticleListActivity extends AppCompatActivity implements
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    startActivity(new Intent(Intent.ACTION_VIEW,
-                            ItemsContract.Items.buildItemUri(getItemId(vh.getAdapterPosition()))));
+                    Bundle bundle;
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                        bundle = ActivityOptions.makeSceneTransitionAnimation(ArticleListActivity.this,
+                                view, view.getTransitionName() + String.valueOf(vh.getAdapterPosition()))
+                                .toBundle();
+//                        bundle = ActivityOptions.makeSceneTransitionAnimation(ArticleListActivity.this)
+//                                .toBundle();
+                        startActivity(new Intent(Intent.ACTION_VIEW,
+                                ItemsContract.Items.buildItemUri(getItemId(vh.getAdapterPosition()))), bundle);
+                    } else {
+                        startActivity(new Intent(Intent.ACTION_VIEW,
+                                ItemsContract.Items.buildItemUri(getItemId(vh.getAdapterPosition()))));
+                    }
                 }
             });
             return vh;
