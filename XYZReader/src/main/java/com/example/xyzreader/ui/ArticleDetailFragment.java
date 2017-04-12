@@ -267,6 +267,7 @@ public class ArticleDetailFragment extends Fragment implements
                 temp = temp.concat("Hello World ");
             bodyView.setText(temp);
 //            bodyView.setText(Html.fromHtml(mCursor.getString(ArticleLoader.Query.BODY).replaceAll("(\r\n|\n)", "<br />")));
+/*
             ImageLoaderHelper.getInstance(getActivity()).getImageLoader()
                     .get(mCursor.getString(ArticleLoader.Query.PHOTO_URL), new ImageLoader.ImageListener() {
                         @Override
@@ -287,6 +288,7 @@ public class ArticleDetailFragment extends Fragment implements
 
                         }
                     });
+*/
         } else {
             mRootView.setVisibility(View.GONE);
             titleView.setText("N/A");

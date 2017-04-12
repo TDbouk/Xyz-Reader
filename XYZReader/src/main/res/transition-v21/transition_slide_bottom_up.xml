@@ -4,6 +4,7 @@
 
     <targets>
         <target android:targetId="@id/article_container" />
+        <target android:excludeId="@id/appbar" />
         <target android:excludeId="@android:id/statusBarBackground" />
         <target android:excludeId="@android:id/navigationBarBackground" />
     </targets>
