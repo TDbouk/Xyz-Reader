@@ -10,7 +10,6 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -175,7 +174,7 @@ public class ArticleListActivity extends AppCompatActivity implements
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                  /*  if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
                         ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(ArticleListActivity.this,
                                 vh.thumbnailView, vh.thumbnailView.getTransitionName() + String.valueOf(vh.getAdapterPosition()));
 //                        bundle = ActivityOptions.makeSceneTransitionAnimation(ArticleListActivity.this)
@@ -185,7 +184,9 @@ public class ArticleListActivity extends AppCompatActivity implements
                     } else {
                         startActivity(new Intent(Intent.ACTION_VIEW,
                                 ItemsContract.Items.buildItemUri(getItemId(vh.getAdapterPosition()))));
-                    }
+                    }*/
+                    startActivity(new Intent(Intent.ACTION_VIEW,
+                            ItemsContract.Items.buildItemUri(getItemId(vh.getAdapterPosition()))));
                 }
             });
             return vh;

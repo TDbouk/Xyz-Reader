@@ -12,7 +12,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ShareCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.graphics.Palette;
@@ -23,7 +22,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -160,7 +158,7 @@ public class ArticleDetailFragment extends Fragment implements
             }
         });
 
-        addSharedAnimation();
+//        addSharedAnimation();
         bindViews();
         updateStatusBar();
 
@@ -248,12 +246,14 @@ public class ArticleDetailFragment extends Fragment implements
                                 + "</font>"));
 
             }
+/*
+            // Code for testing purposes only
             String temp = "Hello World  ";
             for (int i = 0; i < 100; i++)
                 temp = temp.concat(" Hello World ");
-            bodyView.setText(temp);
+            bodyView.setText(temp);*/
 
-//            bodyView.setText(Html.fromHtml(mCursor.getString(ArticleLoader.Query.BODY).replaceAll("(\r\n|\n)", "<br />")));
+            bodyView.setText(Html.fromHtml(mCursor.getString(ArticleLoader.Query.BODY).replaceAll("(\r\n|\n)", "<br />")));
             ImageLoaderHelper.getInstance(getActivity()).getImageLoader()
                     .get(mCursor.getString(ArticleLoader.Query.PHOTO_URL), new ImageLoader.ImageListener() {
                         @Override
@@ -275,6 +275,7 @@ public class ArticleDetailFragment extends Fragment implements
                         }
                     });
 
+/*
             mPhotoView.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
                 @Override
                 public boolean onPreDraw() {
@@ -284,6 +285,7 @@ public class ArticleDetailFragment extends Fragment implements
                     return true;
                 }
             });
+*/
         } else {
             mRootView.setVisibility(View.GONE);
             titleView.setText("N/A");
