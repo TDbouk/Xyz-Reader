@@ -12,8 +12,12 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
+import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ShareCompat;
 import android.support.v4.view.ViewCompat;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.graphics.Palette;
 import android.text.Html;
 import android.text.format.DateUtils;
@@ -22,6 +26,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -52,6 +57,8 @@ public class ArticleDetailFragment extends Fragment implements
     private long mItemId;
     private int mItemPosition;
     private View mRootView;
+    private FloatingActionButton mShareFab;
+    private CollapsingToolbarLayout mToolbar;
     private int mMutedColor = 0xFF333333;
     private ObservableScrollView mScrollView;
     private DrawInsetsFrameLayout mDrawInsetsFrameLayout;
@@ -123,6 +130,7 @@ public class ArticleDetailFragment extends Fragment implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mRootView = inflater.inflate(R.layout.fragment_article_detail, container, false);
+        mShareFab = (FloatingActionButton) mRootView.findViewById(R.id.share_fab);
         mDrawInsetsFrameLayout = (DrawInsetsFrameLayout)
                 mRootView.findViewById(R.id.draw_insets_frame_layout);
         mDrawInsetsFrameLayout.setOnInsetsCallback(new DrawInsetsFrameLayout.OnInsetsCallback() {
@@ -143,22 +151,48 @@ public class ArticleDetailFragment extends Fragment implements
             }
         });
 
-        mPhotoView = (ImageView) mRootView.findViewById(R.id.photo);
-        mPhotoContainerView = mRootView.findViewById(R.id.photo_container);
+        if (mScrollView != null) {
+            mScrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
+                @Override
+                public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
 
-        mStatusBarColorDrawable = new ColorDrawable(0);
+                    if (scrollY > oldScrollY) {
+                        // Scroll down
+                        mShareFab.hide();
+                    }
+                    if (scrollY < oldScrollY) {
+                        // Scroll up
+                        mShareFab.hide();
+                    }
 
-        mRootView.findViewById(R.id.share_fab).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(Intent.createChooser(ShareCompat.IntentBuilder.from(getActivity())
-                        .setType("text/plain")
-                        .setText("Some sample text")
-                        .getIntent(), getString(R.string.action_share)));
-            }
-        });
+                    if (scrollY == 0) {
+                        // Top Scroll
+                        mShareFab.show();
+                    }
 
-//        addSharedAnimation();
+                    if (scrollY == (v.getChildAt(0).getMeasuredHeight() - v.getMeasuredHeight())) {
+                        // Bottom Scroll
+                        mShareFab.show();
+                    }
+                }
+            });
+
+            mPhotoView = (ImageView) mRootView.findViewById(R.id.photo);
+            mPhotoContainerView = mRootView.findViewById(R.id.photo_container);
+
+            mStatusBarColorDrawable = new ColorDrawable(0);
+
+            mShareFab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    startActivity(Intent.createChooser(ShareCompat.IntentBuilder.from(getActivity())
+                            .setType("text/plain")
+                            .setText("Some sample text")
+                            .getIntent(), getString(R.string.action_share)));
+                }
+            });
+        }
+        addSharedAnimation();
         bindViews();
         updateStatusBar();
 
@@ -246,13 +280,6 @@ public class ArticleDetailFragment extends Fragment implements
                                 + "</font>"));
 
             }
-/*
-            // Code for testing purposes only
-            String temp = "Hello World  ";
-            for (int i = 0; i < 100; i++)
-                temp = temp.concat(" Hello World ");
-            bodyView.setText(temp);*/
-
             bodyView.setText(Html.fromHtml(mCursor.getString(ArticleLoader.Query.BODY).replaceAll("(\r\n|\n)", "<br />")));
             ImageLoaderHelper.getInstance(getActivity()).getImageLoader()
                     .get(mCursor.getString(ArticleLoader.Query.PHOTO_URL), new ImageLoader.ImageListener() {
@@ -275,7 +302,6 @@ public class ArticleDetailFragment extends Fragment implements
                         }
                     });
 
-/*
             mPhotoView.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
                 @Override
                 public boolean onPreDraw() {
@@ -285,7 +311,6 @@ public class ArticleDetailFragment extends Fragment implements
                     return true;
                 }
             });
-*/
         } else {
             mRootView.setVisibility(View.GONE);
             titleView.setText("N/A");
