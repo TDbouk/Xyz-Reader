@@ -12,19 +12,18 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ShareCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.graphics.Palette;
 import android.text.Html;
 import android.text.format.DateUtils;
 import android.text.method.LinkMovementMethod;
-import android.transition.Slide;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AnimationUtils;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -104,6 +103,10 @@ public class ArticleDetailFragment extends Fragment implements
         mStatusBarFullOpacityBottom = getResources().getDimensionPixelSize(
                 R.dimen.detail_card_top_margin);
         setHasOptionsMenu(true);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getActivity().postponeEnterTransition();
+        }
     }
 
     public ArticleDetailActivity getActivityCast() {
@@ -119,7 +122,6 @@ public class ArticleDetailFragment extends Fragment implements
         // fragments because their mIndex is -1 (haven't been added to the activity yet). Thus,
         // we do this in onActivityCreated.
         getLoaderManager().initLoader(0, null, this);
-
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -162,7 +164,6 @@ public class ArticleDetailFragment extends Fragment implements
             }
         });
 
-//        addEnterTransitionToArticle();
         addSharedAnimation();
         bindViews();
         updateStatusBar();
@@ -170,16 +171,26 @@ public class ArticleDetailFragment extends Fragment implements
         return mRootView;
     }
 
-    private void addEnterTransitionToArticle() {
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-            Slide slide = new Slide(Gravity.BOTTOM);
-            slide.addTarget(R.id.article_container);
-            slide.setInterpolator(AnimationUtils.loadInterpolator(getActivity(),
-                    android.R.interpolator.linear_out_slow_in));
-            slide.setDuration(500);
-            getActivity().getWindow().setEnterTransition(slide);
-        }
+
+
+/*
+    @Override
+    public void onAttach(final Context context) {
+        super.onAttach(context);
+
+        mRootView.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+            @Override
+            public boolean onPreDraw() {
+                mRootView.getViewTreeObserver().removeOnPreDrawListener(this);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    AppCompatActivity activity = (AppCompatActivity) getActivity();
+                    activity.supportStartPostponedEnterTransition();
+                }
+                return false;
+            }
+        });
     }
+*/
 
     public void addSharedAnimation() {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
@@ -266,8 +277,8 @@ public class ArticleDetailFragment extends Fragment implements
             for (int i = 0; i < 100; i++)
                 temp = temp.concat("Hello World ");
             bodyView.setText(temp);
+
 //            bodyView.setText(Html.fromHtml(mCursor.getString(ArticleLoader.Query.BODY).replaceAll("(\r\n|\n)", "<br />")));
-/*
             ImageLoaderHelper.getInstance(getActivity()).getImageLoader()
                     .get(mCursor.getString(ArticleLoader.Query.PHOTO_URL), new ImageLoader.ImageListener() {
                         @Override
@@ -288,7 +299,16 @@ public class ArticleDetailFragment extends Fragment implements
 
                         }
                     });
-*/
+
+            mPhotoView.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+                @Override
+                public boolean onPreDraw() {
+                    mPhotoView.getViewTreeObserver().removeOnPreDrawListener(this);
+                    // Start the postponed transition here
+                    ActivityCompat.startPostponedEnterTransition(getActivity());
+                    return true;
+                }
+            });
         } else {
             mRootView.setVisibility(View.GONE);
             titleView.setText("N/A");
