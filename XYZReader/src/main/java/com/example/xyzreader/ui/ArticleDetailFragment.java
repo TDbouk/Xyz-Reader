@@ -103,10 +103,6 @@ public class ArticleDetailFragment extends Fragment implements
         mStatusBarFullOpacityBottom = getResources().getDimensionPixelSize(
                 R.dimen.detail_card_top_margin);
         setHasOptionsMenu(true);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getActivity().postponeEnterTransition();
-        }
     }
 
     public ArticleDetailActivity getActivityCast() {
@@ -170,27 +166,6 @@ public class ArticleDetailFragment extends Fragment implements
 
         return mRootView;
     }
-
-
-
-/*
-    @Override
-    public void onAttach(final Context context) {
-        super.onAttach(context);
-
-        mRootView.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-            @Override
-            public boolean onPreDraw() {
-                mRootView.getViewTreeObserver().removeOnPreDrawListener(this);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    AppCompatActivity activity = (AppCompatActivity) getActivity();
-                    activity.supportStartPostponedEnterTransition();
-                }
-                return false;
-            }
-        });
-    }
-*/
 
     public void addSharedAnimation() {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
@@ -273,9 +248,9 @@ public class ArticleDetailFragment extends Fragment implements
                                 + "</font>"));
 
             }
-            String temp = "Hello World ";
+            String temp = "Hello World  ";
             for (int i = 0; i < 100; i++)
-                temp = temp.concat("Hello World ");
+                temp = temp.concat(" Hello World ");
             bodyView.setText(temp);
 
 //            bodyView.setText(Html.fromHtml(mCursor.getString(ArticleLoader.Query.BODY).replaceAll("(\r\n|\n)", "<br />")));
