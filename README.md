@@ -3,6 +3,10 @@
 An Android app representing a mock RSS feed reader featuring banner photos and headlines. The feeds are shown in a staggered view. A View Pager is used to implement the detail view where the user can read further details.  
 The main goal of this project is to create and use material design elements, surfaces, transitions and graphics by transforming a developed app across multiple factors. 
 
+## Screenshots
+![screenshot1](screenshots/xyz-reader.png)
+![screenshot1](screenshots/xyz-reader_2.png)
+
 ## Getting Started
 The below instruction will get you a copy of the project up and running on your machine for development and testing purposes.
 
